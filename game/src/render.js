@@ -325,7 +325,7 @@ export function createRenderer(canvas) {
     const lg = lightCanvas.getContext('2d');
     lg.setTransform(1, 0, 0, 1, 0, 0);
     lg.clearRect(0, 0, FIELD.width, FIELD.height);
-    lg.fillStyle = `rgba(6, 8, 20, ${0.55 * night})`;
+    lg.fillStyle = `rgba(6, 8, 20, ${0.48 * night})`;
     lg.fillRect(0, 0, FIELD.width, FIELD.height);
     lg.globalCompositeOperation = 'destination-out';
     const toScreen = (wx, wy, wz) => {
@@ -345,7 +345,7 @@ export function createRenderer(canvas) {
       for (const l of state.lights) {
         if (!inView(l.x, l.y, 160)) continue;
         const s = toScreen(l.x, l.y);
-        if (s) punch(s.x, s.y, 200, 0.95);
+        if (s) punch(s.x, s.y, 230, 0.95);
       }
     }
     const p = state.player;
@@ -374,16 +374,16 @@ export function createRenderer(canvas) {
     for (const c of state.cars) {
       if (c.health >= 30 || !inView(c.x, c.y, 160)) continue;
       const w = toScreen(c.x, c.y);
-      if (w) punch(w.x, w.y, 210, 0.8);
+      if (w) punch(w.x, w.y, 240, 0.85);
     }
     if (state.heli) {
       const s = toScreen(state.heli.x, state.heli.y);
-      if (s) punch(s.x, s.y, 180, 0.85);
+      if (s) punch(s.x, s.y, 210, 0.9);
     }
     lg.globalCompositeOperation = 'source-over';
     ctx.drawImage(lightCanvas, 0, 0);
     ctx.save();
-    ctx.globalAlpha = 0.85 * night;
+    ctx.globalAlpha = 0.95 * night;
     ctx.fillStyle = '#ffca28';
     for (const b of state.buildings) {
       if (!inView(b.x + b.w / 2, b.y + b.h / 2, 100)) continue;
@@ -893,7 +893,7 @@ export function createRenderer(canvas) {
       ctx.arc(sun.x, sun.y, 30, 0, Math.PI * 2);
       ctx.fill();
     }
-    if (dusk>0) { const band = ctx.createLinearGradient(0,cam.horizonY-60,0,cam.horizonY+20); band.addColorStop(0,'rgba(255,140,60,0)'); band.addColorStop(0.5,`rgba(255,140,60,${0.55*dusk})`); band.addColorStop(1,'rgba(255,140,60,0)'); ctx.fillStyle=band; ctx.fillRect(0,cam.horizonY-60,FIELD.width,80); }
+    if (dusk>0) { const band = ctx.createLinearGradient(0,cam.horizonY-80,0,cam.horizonY+30); band.addColorStop(0,'rgba(255,140,60,0)'); band.addColorStop(0.5,`rgba(255,140,60,${0.7*dusk})`); band.addColorStop(1,'rgba(255,140,60,0)'); ctx.fillStyle=band; ctx.fillRect(0,cam.horizonY-80,FIELD.width,110); }
     if (sun && night > 0.5) {
       ctx.fillStyle = `rgba(230, 235, 255, ${0.9 * night})`;
       ctx.beginPath();
@@ -1072,7 +1072,7 @@ export function createRenderer(canvas) {
     const horiz = Math.abs(best.b.x - best.a.x) > Math.abs(best.b.y - best.a.y);
     const baseGlow = 0.15 + 0.85 * night;
     const winCol = (f) => night > 0.4 ? `rgba(255, 213, 79, ${baseGlow * (0.6 + 0.8 * f)})` : `rgba(157, 184, 200, ${0.35 + 0.4 * f})`;
-    const wins = b.props.filter((pr) => pr.kind === 'sky').slice(0, 6);
+    const wins = b.props.filter((pr) => pr.kind === 'sky').slice(0, 9);
     for (const w of wins) {
       const u = Math.max(0.08, Math.min(0.92, horiz ? w.dx / b.w : w.dy / b.h));
       const v = 0.3 + (horiz ? w.dy / b.h : w.dx / b.w) * 0.5;
@@ -1263,7 +1263,7 @@ export function createRenderer(canvas) {
       ctx.globalAlpha = 1;
     }
     const bobY = Math.sin(h.bob * 2.2) * 6;
-    const body = projectPoint(cam, h.x, h.y, 220 + bobY);
+    const body = projectPoint(cam, h.x, h.y, 160 + bobY);
     if (!body) return;
     const sc = body.s * 0.5;
     ctx.save();
@@ -1327,8 +1327,8 @@ export function createRenderer(canvas) {
         const px = pool ? pool.x : (p1.x + p2.x) / 2;
         const py = pool ? pool.y : (p1.y + p2.y) / 2;
         const cg = ctx.createLinearGradient(body.x, body.y, px, py);
-        cg.addColorStop(0, 'rgba(255,245,157,0.8)');
-        cg.addColorStop(1, 'rgba(255,245,157,0.2)');
+        cg.addColorStop(0, 'rgba(255,245,157,0.9)');
+        cg.addColorStop(1, 'rgba(255,245,157,0.3)');
         ctx.fillStyle = cg;
         ctx.beginPath();
         ctx.moveTo(body.x, body.y);
@@ -1336,12 +1336,12 @@ export function createRenderer(canvas) {
         ctx.lineTo(p2.x, p2.y);
         ctx.closePath();
         ctx.fill();
-        const pg = ctx.createRadialGradient(px, py, 2, px, py, 80);
-        pg.addColorStop(0, 'rgba(255,245,157,0.5)');
+        const pg = ctx.createRadialGradient(px, py, 2, px, py, 95);
+        pg.addColorStop(0, 'rgba(255,245,157,0.65)');
         pg.addColorStop(1, 'rgba(255,245,157,0)');
         ctx.fillStyle = pg;
         ctx.beginPath();
-        ctx.ellipse(px, py, 80, 30, 0, 0, Math.PI * 2);
+        ctx.ellipse(px, py, 95, 34, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
