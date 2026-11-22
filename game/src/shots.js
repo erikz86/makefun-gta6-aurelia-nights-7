@@ -54,10 +54,9 @@ function enterStarterCar(world) {
 
 const HARBOUR_RUN = [{ x: 400, y: 1650 }];
 
-/** Pull `n` pedestrians into a crowd around (x, y); they stand and linger there. */
-function clusterPeds(world, x, y, radius, n) {
+function clusterPeds(world, x, y, radius, n, s) {
   const rng = world.state.rng;
-  for (let i = 0; i < n && i < world.state.peds.length; i += 1) {
+  for (let i = s || 0; i < (s || 0) + n && i < world.state.peds.length; i += 1) {
     const ped = world.state.peds[i];
     ped.x = x + rng.range(-radius, radius);
     ped.y = y + rng.range(-radius, radius);
@@ -67,7 +66,6 @@ function clusterPeds(world, x, y, radius, n) {
   }
 }
 
-/** Park a wrecked traffic car (health 12: it smokes + glows) at a fixed spot in view. */
 function burnCarAt(world, x, y, angle) {
   const car = world.state.cars.find((c) => !c.parked && c.kind === 'car');
   if (!car) return;
@@ -79,9 +77,9 @@ function burnCarAt(world, x, y, angle) {
   car.angle = angle || 0;
 }
 
-/** Place the wreck + crowd ahead of where the player ends up (forward/lateral).
- *  `angle` overrides the heading: the chase stages mid-turn, so its wreck is
- *  placed along the road (east), not along the car's turning nose. */
+function parkCarAt(w, x, y, a) { const c = w.state.cars.find((c) => !c.parked && c.kind === 'car'); if (!c) return; c.parked = true; c.speed = 0; c.x = x; c.y = y; c.angle = a || 0; }
+
+/** Wreck + crowd ahead of the player (forward/lateral). */
 function stageWreckAhead(world, angle) {
   const s = world.state;
   const car = s.playerCar;
@@ -120,7 +118,11 @@ export function stageShot(name, world) {
     if (world.state.playerCar) world.state.playerCar.health = 400;
     world.setWanted(5);
     runSteps(world, 300, createRouteDriver([...HARBOUR_RUN, { x: 1900, y: 1650 }]));
-    stageWreckAhead(world, 0); // burning wreck + crowd in the cover frame (road east)
+    stageWreckAhead(world, 0);
+    const pc = world.state.playerCar, px = pc ? pc.x : world.state.player.x, py = pc ? pc.y : world.state.player.y;
+    parkCarAt(world, px + 260, py - 130, 0.15);
+    parkCarAt(world, px + 560, py + 140, -0.15);
+    clusterPeds(world, px + 180, py - 140, 90, 8, 14);
     world.setWanted(5);
     runSteps(world, 10, createRouteDriver([{ x: 1900, y: 1650 }]));
     state.timeOfDay = 0.62; // sunset dusk, golden-hour tint

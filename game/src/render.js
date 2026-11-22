@@ -884,7 +884,7 @@ export function createRenderer(canvas) {
     const dusk = t > 0.5 && t < 0.75 ? Math.min(1, (t - 0.5) / 0.08) * Math.min(1, (0.75 - t) / 0.08) : 0;
     if (sun && dusk > 0) {
       const glow = ctx.createRadialGradient(sun.x, sun.y, 4, sun.x, sun.y, 120);
-      glow.addColorStop(0, `rgba(255, 200, 120, ${0.85 * dusk})`);
+      glow.addColorStop(0, `rgba(255, 200, 120, ${1.0 * dusk})`);
       glow.addColorStop(1, 'rgba(255, 200, 120, 0)');
       ctx.fillStyle = glow;
       ctx.fillRect(sun.x - 120, sun.y - 120, 240, 240);
@@ -893,7 +893,7 @@ export function createRenderer(canvas) {
       ctx.arc(sun.x, sun.y, 30, 0, Math.PI * 2);
       ctx.fill();
     }
-    if (dusk>0) { const band = ctx.createLinearGradient(0,cam.horizonY-60,0,cam.horizonY+20); band.addColorStop(0,'rgba(255,140,60,0)'); band.addColorStop(0.5,`rgba(255,140,60,${0.35*dusk})`); band.addColorStop(1,'rgba(255,140,60,0)'); ctx.fillStyle=band; ctx.fillRect(0,cam.horizonY-60,FIELD.width,80); }
+    if (dusk>0) { const band = ctx.createLinearGradient(0,cam.horizonY-60,0,cam.horizonY+20); band.addColorStop(0,'rgba(255,140,60,0)'); band.addColorStop(0.5,`rgba(255,140,60,${0.55*dusk})`); band.addColorStop(1,'rgba(255,140,60,0)'); ctx.fillStyle=band; ctx.fillRect(0,cam.horizonY-60,FIELD.width,80); }
     if (sun && night > 0.5) {
       ctx.fillStyle = `rgba(230, 235, 255, ${0.9 * night})`;
       ctx.beginPath();
@@ -1319,22 +1319,29 @@ export function createRenderer(canvas) {
     if (g) {
       const la = h.lightAngle;
       const len = dist + 80;
-      const p1 = projectPoint(cam, h.x + Math.cos(la + 0.35) * len, h.y + Math.sin(la + 0.35) * len, 0);
-      const p2 = projectPoint(cam, h.x + Math.cos(la - 0.35) * len, h.y + Math.sin(la - 0.35) * len, 0);
+      const p1 = projectPoint(cam, h.x + Math.cos(la + 0.5) * len, h.y + Math.sin(la + 0.5) * len, 0);
+      const p2 = projectPoint(cam, h.x + Math.cos(la - 0.5) * len, h.y + Math.sin(la - 0.5) * len, 0);
       const pool = projectPoint(cam, h.x + Math.cos(la) * (dist + 40), h.y + Math.sin(la) * (dist + 40), 0);
       if (p1 && p2) {
         ctx.save();
         const px = pool ? pool.x : (p1.x + p2.x) / 2;
         const py = pool ? pool.y : (p1.y + p2.y) / 2;
         const cg = ctx.createLinearGradient(body.x, body.y, px, py);
-        cg.addColorStop(0, 'rgba(255,245,157,0.55)');
-        cg.addColorStop(1, 'rgba(255,245,157,0.08)');
+        cg.addColorStop(0, 'rgba(255,245,157,0.8)');
+        cg.addColorStop(1, 'rgba(255,245,157,0.2)');
         ctx.fillStyle = cg;
         ctx.beginPath();
         ctx.moveTo(body.x, body.y);
         ctx.lineTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.closePath();
+        ctx.fill();
+        const pg = ctx.createRadialGradient(px, py, 2, px, py, 80);
+        pg.addColorStop(0, 'rgba(255,245,157,0.5)');
+        pg.addColorStop(1, 'rgba(255,245,157,0)');
+        ctx.fillStyle = pg;
+        ctx.beginPath();
+        ctx.ellipse(px, py, 80, 30, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
