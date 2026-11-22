@@ -1,6 +1,8 @@
 # Aurelia Nights VII
 
-[![make.fun](https://img.shields.io/badge/make.fun-bounty-7c3aed)](https://make.fun) [![rank](https://img.shields.io/badge/rank-coming_soon-blue)](https://make.fun) [![reward](https://img.shields.io/badge/reward-USDC-green)](https://make.fun)
+[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![rank](https://make.fun/badge/gta6-01/erikz86/makefun-gta6-aurelia-nights-7/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![reward](https://make.fun/badge/gta6-01/erikz86/makefun-gta6-aurelia-nights-7/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
 A 3D open-world crime game set in Aurelia Bay: steal cars, outrun the police, climb the wanted ladder, and finish all 10 story chapters. The world is rendered in perspective 3D — a chase camera, sunset sky, and 3D buildings, cars, and crowds — drawn with a pure pinhole projector on the plain canvas 2D pipeline (no WebGL, no libraries). The camera kicks in on rams and widens at speed.
 
